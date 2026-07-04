@@ -1,0 +1,7 @@
+interface:
+  display_name: "Novel To Short-Drama Script"
+  short_description: "Convert Chinese novels into short-drama scripts"
+  default_prompt: "Use $novel-to-shortdrama-script to adapt this novel into a short-drama script."
+
+policy:
+  allow_implicit_invocation: true

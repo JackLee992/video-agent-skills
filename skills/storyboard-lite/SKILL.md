@@ -1,11 +1,11 @@
 ---
 name: storyboard-lite
-description: Generate a lightweight storyboard table from a script. Use when the user asks for a storyboard, shot list, shot breakdown, video storyboard table, short drama storyboard, or visual scene breakdown. The user only needs to provide script text; story type and art style are optional; assets are extracted automatically without asset IDs.
+description: Generate a lightweight storyboard table and paste-ready AI video prompt groups from a script. Use when the user asks for a storyboard, shot list, shot breakdown, video storyboard table, short drama storyboard, visual scene breakdown, or video generation prompts. The user only needs to provide script text; story type and art style are optional; assets are extracted automatically without asset IDs.
 ---
 
 # Storyboard Lite
 
-Use this skill to turn script text into a practical storyboard table with minimal user input. This skill is standalone and does not depend on any specific project, app, repository, API, or external asset database.
+Use this skill to turn script text into a practical storyboard table and a set of paste-ready video prompt groups with minimal user input. This skill is standalone and does not depend on any specific project, app, repository, API, or external asset database.
 
 ## Inputs
 
@@ -19,6 +19,7 @@ Optional:
 - Art style.
 - Output format.
 - Whether to include or omit the extracted asset list.
+- Whether to include or omit video prompt groups.
 
 Defaults:
 
@@ -26,6 +27,7 @@ Defaults:
 - Art style: 真人现代都市
 - Output format: Markdown
 - Asset mode: extract asset names automatically; do not generate asset IDs.
+- Video group mode: include video prompt groups after the storyboard table.
 
 If the user only provides a script, proceed with defaults and briefly state the assumed story type and art style before the output. If the user asks what options are available, show the concise option lists in "Option Prompt".
 
@@ -99,9 +101,30 @@ Default output:
 
 | 序号 | 画面描述 | 场景 | 关联资产名称 | 时长 | 景别 | 运镜 | 角色动作 | 朝向 | 空间关系 | 情绪 | 台词 | 音效 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
+
+## 视频组列表
+
+### 视频组1
+画面风格和类型: 真人写实, 都市写实摄影，电影风格，自然光照，极致细节
+
+场景: 客厅
+角色：角色A、角色B
+道具：手机、合同
+
+运镜+画面：[0-3s]
+画面：...
+运镜：...
+声音：...
+
+[3-7s]
+画面：...
+运镜：...
+声音：... 台词（情绪）：角色A："..."
+
+其他需求：面部五官清晰稳定不变形，同一角色全程外貌一致，人体结构正常比例自然，动作连续自然不跳帧，无模糊无重影，无字幕无文字，无背景音乐。
 ```
 
-If the user requests CSV, XML, or JSON, keep the same fields and omit asset IDs.
+If the user requests CSV, XML, or JSON, keep the same storyboard fields and omit asset IDs. Still include the video prompt groups in Markdown unless the user explicitly asks for a fully machine-readable output.
 
 ## Storyboard Rules
 
@@ -120,6 +143,74 @@ If the user requests CSV, XML, or JSON, keep the same fields and omit asset IDs.
 - `音效` may include only concrete physical sound sources, environment sound, action sound, or foley. Do not write BGM, 配乐, 旋律, or instruments as mood scoring.
 - Avoid unnecessary decorative shots. Merge adjacent shots if they repeat the same information.
 
+## Video Group Rules
+
+After the storyboard table, output `## 视频组列表`. Video groups are generation-ready prompt blocks derived from the storyboard. They should be usable directly in platforms such as 即梦 or 小云雀.
+
+Do not output API response JSON, scene IDs, episode IDs, image URLs, video URLs, status fields, or timestamps unless the user explicitly asks for an API mock. If the user provides an API response as reference, use only the prompt-writing style and duration discipline from it.
+
+Grouping:
+
+- Build video groups from the storyboard in order. Do not add plot events beyond the script or storyboard.
+- Each video group duration must be 4-15 seconds.
+- Prefer grouping continuous shots in the same scene and dramatic beat into one video group.
+- If a single storyboard shot would exceed 15 seconds, split it into smaller timed beats while preserving the original dialogue order.
+- Do not create groups shorter than 4 seconds. Merge or rebalance adjacent beats unless the user explicitly requests a shorter fragment.
+- Restart each video group's internal timecode at `[0s]`.
+- Use precise internal time ranges such as `[0-2.5s]`, `[2.5-5s]`, `[5-8s]`. The final timecode must match the group duration.
+- Keep scene, character, prop, wound, costume, emotional, and spatial continuity across groups. Use phrases such as `承接上组状态`, `延续本场左右基线`, or `尾帧承接下组` where useful.
+
+Format every video group exactly like this:
+
+```md
+### 视频组1
+画面风格和类型: 真人写实, 都市写实摄影，电影风格，自然光照，极致细节
+
+场景: 场景名称
+角色：角色A、角色B
+道具：道具A、道具B
+
+运镜+画面：[0-2.5s]
+画面：...
+运镜：...
+声音：...
+
+[2.5-5s]
+画面：...
+运镜：...
+声音：... 台词（情绪）：角色A："原文台词"
+
+其他需求：面部五官清晰稳定不变形，同一角色全程外貌一致，人体结构正常比例自然，动作连续自然不跳帧，无模糊无重影，无字幕无文字，无背景音乐。
+```
+
+Header rules:
+
+- `画面风格和类型` should combine the requested art style with practical image-generation descriptors. For modern live-action short drama, use `真人写实, 都市写实摄影，电影风格，自然光照，极致细节` unless the user requested another style.
+- `场景` must be a concise location name from the storyboard.
+- `角色` must list only visible or audibly speaking characters in the group.
+- `道具` must list plot-relevant visible props. Use `无` only when no important prop appears.
+
+Prompt writing rules:
+
+- Each timed beat must include `画面：`, `运镜：`, and `声音：`.
+- `画面` must describe visible action, composition, facing direction, screen position, emotional micro-expression, body movement, and continuity state. Prefer concrete filmable details over abstract summaries.
+- For multi-character scenes, establish or preserve a left/right baseline, for example `本场左右基线：林小满画面中央偏右，厨房门在画面左侧深处，沙发在画面右侧`.
+- Use generation-friendly camera language: `中景`, `近景`, `偏紧近景`, `极近特写`, `远景`, `微距特写`, `Dolly In`, `Dolly Out`, `Truck`, `Orbit`, `Rack Focus`, `Tilt Up`, `Crash Zoom`, `手持微晃`, `固定`, `深焦`, `浅焦`, `长焦压缩空间`.
+- Describe lighting and atmosphere inside the visual beat when it affects the image: `暖黄侧光`, `冷白日光灯`, `窗帘缝隙透入的下午阳光`, `手机蓝光`, `台灯光圈`, `浮尘`, `汗珠`, `碎纸片飘落`.
+- `声音` must include only diegetic sound, foley, environmental sound, and dialogue. Do not include background music or mood scoring.
+- Dialogue must be copied verbatim and formatted as `台词（情绪）：角色："台词"` or `台词（续，情绪）：角色："台词"`.
+- When a beat is mainly the listener's reaction, keep the speaking line in `声音` if it continues from the previous speaker, and describe the listener's micro-reaction in `画面`.
+- Use `尾帧` notes for continuity when the final pose, gaze, or action should carry into the next group.
+- End every group with the exact `其他需求` line from the template unless the user requested a different technical constraint.
+
+Quality checklist before final output:
+
+- The storyboard table still exists and remains readable.
+- Every script dialogue line appears in the storyboard and in the relevant video group.
+- Every video group is 4-15 seconds.
+- Every video group has style, scene, roles, props, timed beats, camera movement, sound, and the final technical constraints.
+- Video prompts contain enough continuity detail for character consistency, spatial consistency, action continuity, and paste-ready video generation.
+
 ## Option Prompt
 
 When the user asks for choices, show concise choices:
@@ -129,4 +220,3 @@ When the user asks for choices, show concise choices:
 
 美术风格可选：真人现代都市、真人古装中国、真人武侠、2D 国风、2D 日漫、2D 扁平设计、2D 成熟都市恋爱、3D 动画、3D 国风、3D 国风赛博、3D 黏土定格。也可以直接写其他风格。
 ```
-
