@@ -1,0 +1,7 @@
+interface:
+  display_name: "Short-Drama Prompt Groups"
+  short_description: "Turn existing short-drama scripts into 4-15s video prompt groups"
+  default_prompt: "Use $shortdrama-prompt-groups to generate a lightweight storyboard and paste-ready video prompt groups from this script."
+
+policy:
+  allow_implicit_invocation: false

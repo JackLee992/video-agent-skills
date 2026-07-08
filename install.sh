@@ -27,6 +27,27 @@ install_link() {
   echo "Installed $link_path -> $skill_source"
 }
 
+remove_legacy_link() {
+  local target_dir="$1"
+  local legacy_name="$2"
+  local link_path="$target_dir/$legacy_name"
+  local target=""
+
+  [[ -L "$link_path" ]] || return 0
+
+  target="$(readlink "$link_path")"
+  case "$target" in
+    "$ROOT_DIR"/skills/storyboard-lite|"$ROOT_DIR"/skills/shortdrama-prompt-groups)
+      rm "$link_path"
+      echo "Removed legacy $link_path -> $target"
+      ;;
+  esac
+}
+
+for target_dir in "$HOME/.codex/skills" "$HOME/.claude/skills" "$HOME/.openclaw/skills" "$HOME/.agents/skills"; do
+  remove_legacy_link "$target_dir" "storyboard-lite"
+done
+
 for skill_source in "$ROOT_DIR"/skills/*; do
   [[ -d "$skill_source" ]] || continue
 

@@ -1,7 +1,0 @@
-interface:
-  display_name: "Storyboard Lite"
-  short_description: "Generate storyboard tables and video prompt groups from scripts"
-  default_prompt: "Use $storyboard-lite to generate a storyboard table and paste-ready video prompt groups from this script."
-
-policy:
-  allow_implicit_invocation: true

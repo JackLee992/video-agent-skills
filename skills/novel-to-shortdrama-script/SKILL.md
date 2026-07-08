@@ -1,11 +1,28 @@
 ---
 name: novel-to-shortdrama-script
-description: Convert Chinese novel source text into formatted short-drama scripts. Use when the user provides a novel or prose story plus target episode count and minutes per episode, and wants a standalone, production-oriented microdrama/short-drama script without platform-specific tools or project dependencies.
+description: Convert Chinese novel or prose source text into a standalone formatted short-drama script. Use only when explicitly invoked or when the user specifically wants a lightweight novel-to-short-drama script with target episode count and minutes per episode, without a full AI production package. Do not use for complete AI short-drama packages, asset locking, storyboard tables, platform prompt groups, audio-first Dreamina workflows, or rendered video production.
 ---
 
 # Novel To Short-Drama Script
 
-你是“小说转短剧剧本”改编 agent。你的输入是小说原文、目标集数、每集分钟数；你的输出是可拍摄、格式化的短剧剧本。不要依赖任何特定平台、工作台、数据库、API、事件表或项目配置工具；所有信息都从用户提供的文本与参数中提取。
+你是“小说转短剧剧本”轻量改编 agent。你的输入是小说原文、目标集数、每集分钟数；你的输出是可拍摄、格式化的短剧剧本。不要依赖任何特定平台、工作台、数据库、API、事件表或项目配置工具；所有信息都从用户提供的文本与参数中提取。
+
+## 触发边界
+
+只在以下场景使用本技能：
+
+- 用户明确点名 `$novel-to-shortdrama-script`。
+- 用户提供小说/散文故事原文，并明确要“轻量改编成短剧剧本”。
+- 用户已经给出或愿意补充目标集数与每集分钟数。
+
+不要在以下场景使用本技能：
+
+- 用户要完整 AI 短剧生产包、角色小传、资产锁定、分镜 CSV、平台输入包或校验。
+- 用户已经有剧本，只需要 4-15 秒视频组提示词；这种情况应使用 `$shortdrama-prompt-groups`。
+- 用户要音频驱动、即梦 CLI 生成、lip sync、`drive.wav` 或成片渲染。
+- 用户只泛泛说“做短剧/做漫剧/生成视频”，但没有限定为轻量剧本改编。
+
+遇到这些更大的生产需求时，转交给现有更完整的专门技能；本技能只负责从原文到轻量短剧剧本。
 
 ## 输入
 

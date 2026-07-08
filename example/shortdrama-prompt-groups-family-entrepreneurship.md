@@ -1,6 +1,6 @@
-# storyboard-lite 示例：家庭冲突创业短剧
+# shortdrama-prompt-groups 示例：家庭冲突创业短剧
 
-这个示例展示 `storyboard-lite` 如何把一段现代都市家庭冲突短剧，生成自动资产清单、分镜表和可直接粘贴到 AI 视频工具的视频组提示词。
+这个示例展示 `shortdrama-prompt-groups` 如何把一段现代都市家庭冲突短剧，生成自动资产清单、分镜表和可直接粘贴到 AI 视频工具的视频组提示词。
 
 ## 输入剧本
 

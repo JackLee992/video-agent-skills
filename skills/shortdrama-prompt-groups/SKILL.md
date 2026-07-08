@@ -1,17 +1,35 @@
 ---
-name: storyboard-lite
-description: Generate a lightweight storyboard table and paste-ready AI video prompt groups from a script. Use when the user asks for a storyboard, shot list, shot breakdown, video storyboard table, short drama storyboard, visual scene breakdown, or video generation prompts. The user only needs to provide script text; story type and art style are optional; assets are extracted automatically without asset IDs.
+name: shortdrama-prompt-groups
+description: Convert an already-written short-drama script, selected episode, or confirmed shot list into lightweight asset notes, a compact storyboard table, and 4-15 second paste-ready AI video prompt groups. Use only when explicitly invoked or when the user specifically asks for platform-ready short-drama video prompt groups from existing script text. Do not use for broad video creation, novel adaptation, full AI short-drama production packages, asset-locking workflows, storyboard-image prompt packs, audio-first Dreamina execution, or HyperFrames rendering.
 ---
 
-# Storyboard Lite
+# Short-Drama Prompt Groups
 
-Use this skill to turn script text into a practical storyboard table and a set of paste-ready video prompt groups with minimal user input. This skill is standalone and does not depend on any specific project, app, repository, API, or external asset database.
+Use this skill to turn existing script text into a practical storyboard table and paste-ready video prompt groups with minimal user input. This skill is intentionally narrow and standalone. It does not replace a full production package, asset bible, audio-first workflow, model submission workflow, or rendered video workflow.
+
+## Routing Guard
+
+Use this skill when all of these are true:
+
+- The user already has a script, selected episode, scene text, or confirmed shot list.
+- The desired output is a lightweight storyboard plus `## 视频组列表`.
+- The video groups should be 4-15 second prompt blocks that can be pasted into AI video platforms such as 即梦 or 小云雀.
+
+Do not use this skill when:
+
+- The input is only a novel/prose source and the user needs an adapted short-drama script first.
+- The user wants a full AI short-drama production package with character bios, asset IDs, locked references, CSV deliverables, platform handoff files, or validation.
+- The user wants storyboard-image prompt packs, character/product/environment reference prompts, or model-specific image/video generation strategy.
+- The user wants audio-first Dreamina execution, `drive.wav`, beat maps, lip sync, or CLI submission.
+- The user wants a finished HyperFrames/OpenVideo rendered composition.
+
+If the user asks for one of those broader workflows, route to the appropriate existing specialized skill instead of continuing here.
 
 ## Inputs
 
 Required:
 
-- Script text.
+- Already-written script text, selected episode text, scene text, or a confirmed shot list.
 
 Optional:
 
